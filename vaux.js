@@ -1,5 +1,5 @@
 import Discord from "discord.js";
-import { vauxToken } from "./vaux-secret.js"
+import { vauxToken } from "./vaux-token.js"
 const client = new Discord.Client();
 
 const channels = client.channels;
@@ -62,6 +62,13 @@ client.on("message", (receivedMessage) => {
         "Yo yo what up " +
           receivedMessage.author.toString() +
           "!"
+      );
+  }
+
+  if (receivedMessage.content.toLowerCase().startsWith("vaux what")) {
+    //   processCommand(receivedMessage);
+    receivedMessage.channel.send(
+        "Bush did 9/11"
       );
   }
 });
