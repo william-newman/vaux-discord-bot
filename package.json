@@ -1,0 +1,25 @@
+{
+  "name": "vaux-discord-bot",
+  "version": "1.0.0",
+  "description": "Typescript bot for Discord.",
+  "main": "vaux.js",
+  "dependencies": {
+    "discord.js": "12.3.1"
+  },
+  "devDependencies": {},
+  "type": "module",
+  "scripts": {
+    "start": "node vaux.js",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/william-newman/vaux-discord-bot.git"
+  },
+  "author": "William Newman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/william-newman/vaux-discord-bot/issues"
+  },
+  "homepage": "https://github.com/william-newman/vaux-discord-bot#readme"
+}
