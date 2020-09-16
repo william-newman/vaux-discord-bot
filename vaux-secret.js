@@ -1,1 +1,1 @@
-export const vauxToken = "NzU1NTk3MzM1ODQ4ODEyNjM3.X2Fm2w.PvRoEJy16pc0T-o7icUg2jAfoWo";
+export const vauxToken = "";
