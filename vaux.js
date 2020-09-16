@@ -69,4 +69,4 @@ client.on("message", (receivedMessage) => {
 //     receivedMessage.content.toLowerCase().
 // }
 
-client.login("NzU1NTk3MzM1ODQ4ODEyNjM3.X2Fm2w.eE111S6up1claKEuqJBWc00fpOU");
+client.login();
