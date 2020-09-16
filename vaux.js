@@ -1,4 +1,5 @@
 import Discord from "discord.js";
+import { vauxToken } from "./vaux-secret.js"
 const client = new Discord.Client();
 
 const channels = client.channels;
@@ -69,4 +70,4 @@ client.on("message", (receivedMessage) => {
 //     receivedMessage.content.toLowerCase().
 // }
 
-client.login();
+client.login(vauxToken);
