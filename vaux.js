@@ -19,8 +19,8 @@ client.on("ready", () => {
     }
   );
 
-  let rawVauxData = fs.readFileSync("./vaux-command-data.json");
-  let vauxData = JSON.parse(rawVauxData);
+  // let rawVauxData = fs.readFileSync("./vaux-command-data.json");
+  // let vauxData = JSON.parse(rawVauxData);
 
   if (time.startsWith("4")) {
     client.user.setActivity("Sad Hour 💀");
@@ -28,23 +28,23 @@ client.on("ready", () => {
     client.user.setActivity("directive 6 protocol", { type: "LISTENING" });
   }
 
-  const serverList = client.guilds.cache;
+  // const serverList = client.guilds.cache;
 
-  //   serverList.forEach((guild) => {
-  //     console.log(guild.name);
+  // serverList.forEach((guild) => {
+  //   console.log(guild.name);
 
-  //     guild.channels.cache.forEach((channel) => {
-  //       console.log(` -  ${channel.name} ${channel.type} ${channel.id}`);
-  //     });
+  //   guild.channels.cache.forEach((channel) => {
+  //     logChannelAndEmojiIDs(
+  //       `${channel.type} -  ${channel.name} ${channel.id}\n`
+  //     );
   //   });
+  // });
 
-  // cataBillyChannel.send("discord.run(invasion.exe)");
   console.log("Running ...");
 });
 
 client.on("message", (receivedMessage) => {
-  const rawVauxData = fs.readFileSync("./vaux-command-data.json");
-  let vauxData = JSON.parse(rawVauxData);
+
   const incomingM = receivedMessage.content.toLowerCase();
   const bellaEmote = receivedMessage.guild.emojis.cache.get(
     "692452430306082918"
@@ -56,6 +56,10 @@ client.on("message", (receivedMessage) => {
     "684533234184486913"
   );
 
+  if (receivedMessage.author.username.match("ChaseDunton")) {
+    receivedMessage.react(chaseBabyEmote);
+  }
+
   if (receivedMessage.author == client.user) {
     return;
   } else if (receivedMessage.channel.id !== "755615150299676752") {
@@ -66,12 +70,15 @@ client.on("message", (receivedMessage) => {
     receivedMessage.react("🎉");
   }
 
-  if (receivedMessage.author.username.match("ChaseDunton")) {
-    receivedMessage.react(chaseBabyEmote);
+  if (
+    receivedMessage.author.username.match("ChaseDunton") &&
+    incomingM.startsWith("make")
+  ) {
+    receivedMessage.channel.send("Make it yourself.");
   }
 
   // receivedMessage.guild.emojis.cache.forEach((customEmoji) => {
-  //   console.log(`${customEmoji.name} ${customEmoji.id}`);
+  //   logChannelAndEmojiIDs(`${customEmoji.name} ${customEmoji.id}\n`);
   // });
 
   if (incomingM.includes("bella")) {
@@ -84,7 +91,8 @@ client.on("message", (receivedMessage) => {
 
   if (incomingM.startsWith("vaux say hi")) {
     receivedMessage.channel.send(
-      "Yo yo what up " + receivedMessage.author.toString() + "!"
+      "Yo yo what up " + receivedMessage.author.toString() + "!",
+      { tts: true }
     );
     localCommandCountDataWriteService("sayHi");
   }
@@ -120,25 +128,37 @@ client.on("message", (receivedMessage) => {
     localCommandCountDataWriteService("fortnite");
   }
 
-  if (incomingM.startsWith("vaux command hit execution count") || incomingM.match("^vaux chec$")) {
+  if (
+    incomingM.startsWith("vaux command hit execution count") ||
+    incomingM.match("^vaux chec$")
+  ) {
     const commandCountObj = localCommandCountDataReadService();
-    let commandCountMessage = 
-    "Thanks: " + commandCountObj.commandCount.thanks +
-    "\nTruth: " + commandCountObj.commandCount.truth +
-    "\nSay Hi: " + commandCountObj.commandCount.sayHi +
-    "\nHelp: " + commandCountObj.commandCount.help +
-    "\nFortnite: " + commandCountObj.commandCount.fortnite +
-    "\n✅CHEC: " + commandCountObj.commandCount.chec +
-    "\nWhat's Good: " + commandCountObj.commandCount.whatsGood;
+    let commandCountMessage =
+      "Thanks: " +
+      commandCountObj.commandCount.thanks +
+      "\nTruth: " +
+      commandCountObj.commandCount.truth +
+      "\nSay Hi: " +
+      commandCountObj.commandCount.sayHi +
+      "\nHelp: " +
+      commandCountObj.commandCount.help +
+      "\nFortnite: " +
+      commandCountObj.commandCount.fortnite +
+      "\n✅CHEC: " +
+      commandCountObj.commandCount.chec +
+      "\nWhat's Good: " +
+      commandCountObj.commandCount.whatsGood;
     receivedMessage.channel.send(commandCountMessage);
     localCommandCountDataWriteService("chec");
   }
 
-  if (incomingM.includes("thanks") || incomingM.includes("thank you") && incomingM.includes("vaux")) {
+  if (
+    incomingM.includes("thanks") ||
+    (incomingM.includes("thank you") && incomingM.includes("vaux"))
+  ) {
     receivedMessage.react("👍");
     localCommandCountDataWriteService("thanks");
   }
-
 
   if (incomingM.startsWith("vaux help")) {
     receivedMessage.channel.send(
@@ -155,10 +175,6 @@ client.on("message", (receivedMessage) => {
   }
 });
 
-// function processCommand(receivedMessage) {
-//     receivedMessage.content.toLowerCase().
-// }
-
 function localCommandCountDataWriteService(command) {
   let rawVauxData = fs.readFileSync("./vaux-command-data.json");
   let vauxData = JSON.parse(rawVauxData);
@@ -173,8 +189,13 @@ function localCommandCountDataReadService() {
   return vauxData;
 }
 
+function logChannelAndEmojiIDs(identificationData) {
+  console.log(identificationData);
+  fs.appendFileSync("./vaux-ids.txt", identificationData);
+}
+
 client.on("disconnect", () => {
-  fs.appendFile("./vaux-logs.txt", "Vaux has disconnected.");
+  fs.appendFileSync("./vaux-logs.txt", "Vaux has disconnected.");
 });
 
 client.login(vauxToken);
