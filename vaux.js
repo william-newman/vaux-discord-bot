@@ -19,7 +19,7 @@ client.on("ready", () => {
     }
   );
 
-  let rawVauxData = fs.readFileSync("./vaux-data.json");
+  let rawVauxData = fs.readFileSync("./vaux-command-data.json");
   let vauxData = JSON.parse(rawVauxData);
 
   if (time.startsWith("4")) {
@@ -43,7 +43,7 @@ client.on("ready", () => {
 });
 
 client.on("message", (receivedMessage) => {
-  const rawVauxData = fs.readFileSync("./vaux-data.json");
+  const rawVauxData = fs.readFileSync("./vaux-command-data.json");
   let vauxData = JSON.parse(rawVauxData);
   const incomingM = receivedMessage.content.toLowerCase();
   const bellaEmote = receivedMessage.guild.emojis.cache.get(
@@ -160,15 +160,15 @@ client.on("message", (receivedMessage) => {
 // }
 
 function localCommandCountDataWriteService(command) {
-  let rawVauxData = fs.readFileSync("./vaux-data.json");
+  let rawVauxData = fs.readFileSync("./vaux-command-data.json");
   let vauxData = JSON.parse(rawVauxData);
   vauxData.commandCount[command]++;
   const stringVauxData = JSON.stringify(vauxData, null, 2);
-  fs.writeFileSync("./vaux-data.json", stringVauxData);
+  fs.writeFileSync("./vaux-command-data.json", stringVauxData);
 }
 
 function localCommandCountDataReadService() {
-  let rawVauxData = fs.readFileSync("./vaux-data.json");
+  let rawVauxData = fs.readFileSync("./vaux-command-data.json");
   let vauxData = JSON.parse(rawVauxData);
   return vauxData;
 }
