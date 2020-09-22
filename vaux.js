@@ -1,8 +1,13 @@
 import Discord from "discord.js";
 import { vauxToken } from "./vaux-token.js";
 import fs from "fs";
-const client = new Discord.Client();
+import Spotify from "node-spotify-api";
 
+const spotifyAPI = new Spotify({
+  id: "<your spotify client id>",
+  secret: "<your spotify client secret>"
+});
+const client = new Discord.Client();
 const channels = client.channels;
 
 const cataVauxChannel = channels.cache.get("755615150299676752");
@@ -10,7 +15,6 @@ const cataBillyChannel = channels.cache.get("688146153786966019");
 
 client.on("ready", () => {
   let time = new Date();
-  time = time.toLocaleTimeString();
   fs.appendFile(
     "./vaux-logs.txt",
     client.user.tag + " has connected at " + time + "\n",
@@ -19,13 +23,29 @@ client.on("ready", () => {
     }
   );
 
+  // spotify.search(
+  //   { type: "track", query: "dancing in the moonlight" },
+  //   function (err, data) {
+  //     if (err) {
+  //       console.log("Error occurred: " + err);
+  //       return;
+  //     }
+
+  //     console.log(data);
+  //     // Do something with 'data'
+  //   }
+  // );
+
   // let rawVauxData = fs.readFileSync("./vaux-command-data.json");
   // let vauxData = JSON.parse(rawVauxData);
 
+  time = time.toLocaleTimeString();
   if (time.startsWith("4")) {
     client.user.setActivity("Sad Hour 💀");
   } else {
-    client.user.setActivity("directive 6 protocol", { type: "LISTENING" });
+    // client.user.setActivity("directive 6 protocol", { type: "LISTENING" });
+    client.user.setActivity("sad stuff", { type: "LISTENING" });
+    // client.user.setActivity("Follow The Leader");
   }
 
   // const serverList = client.guilds.cache;
@@ -43,8 +63,19 @@ client.on("ready", () => {
   console.log("Running ...");
 });
 
-client.on("message", (receivedMessage) => {
+client.on("presenceUpdate", (presence) => {
+  if (presence) {
+    if (presence.guild.id.match("278406764846907392")) {
+      if (presence.activities[0]) {
+        client.user.setActivity(presence.activities[0].name, {
+          type: "PLAYING",
+        });
+      }
+    }
+  }
+});
 
+client.on("message", (receivedMessage) => {
   const incomingM = receivedMessage.content.toLowerCase();
   const bellaEmote = receivedMessage.guild.emojis.cache.get(
     "692452430306082918"
@@ -57,7 +88,10 @@ client.on("message", (receivedMessage) => {
   );
 
   if (receivedMessage.author.username.match("ChaseDunton")) {
-    receivedMessage.react(chaseBabyEmote);
+    const chaseReactProbability = Math.floor(Math.random() * 10);
+    if (chaseReactProbability <= 2) {
+      receivedMessage.react(chaseBabyEmote);
+    }
   }
 
   if (receivedMessage.author == client.user) {
@@ -67,14 +101,31 @@ client.on("message", (receivedMessage) => {
   }
 
   if (receivedMessage.author.username.match("LN")) {
-    receivedMessage.react("🎉");
+    const tadaReactProbability = Math.floor(Math.random() * 10);
+    if (tadaReactProbability === 0) {
+      receivedMessage.react("🎉");
+    }
   }
 
   if (
     receivedMessage.author.username.match("ChaseDunton") &&
-    incomingM.startsWith("make")
+    incomingM.startsWith("make ")
   ) {
     receivedMessage.channel.send("Make it yourself.");
+  }
+
+  if (
+    incomingM.startsWith("vaux what are you doing") ||
+    incomingM.startsWith("vaux wyd")
+  ) {
+    const activities = client.user.presence.activities;
+    let botActivities = [];
+    activities.forEach((activity) => {
+      botActivities.push(
+        activity.type.toLocaleLowerCase() + " " + activity.name
+      );
+    });
+    receivedMessage.channel.send(botActivities.toLocaleString());
   }
 
   // receivedMessage.guild.emojis.cache.forEach((customEmoji) => {
