@@ -75,6 +75,7 @@ client.on("presenceUpdate", (presence) => {
   }
 });
 
+// Function to be triggered on any message to any server the bot is in
 client.on("message", (receivedMessage) => {
   const incomingM = receivedMessage.content.toLowerCase();
   const bellaEmote = receivedMessage.guild.emojis.cache.get(
